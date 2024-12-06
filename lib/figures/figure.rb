@@ -16,5 +16,6 @@ module Figure
   def change_position(row, column)
     @row = row
     @column = column
+    @possible_moves = possible_moves
   end
 end

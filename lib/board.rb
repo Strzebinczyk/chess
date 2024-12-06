@@ -88,59 +88,11 @@ class Board
     @positions[1][7] = @display[:black][:pawn]
   end
 
-  def to_figure(string)
-    figures = { 'rook' => %i[rook1 rook2 rook], 'knight' => %i[knight1 knight2 knight], 'bishop' => %i[bishop1 bishop2 bishop],
-                'king' => [:king], 'queen' => [:queen], 'pawn' => %i[pawn1 pawn2 pawn3 pawn4 pawn5 pawn6 pawn7 pawn8 pawn] }
-    figures[string]
+  def clear_position(row, column)
+    @positions[row][column] = nil
   end
 
-  def move_possible?(figure, row, column)
-    possible_moves = figure.possible_moves
-    return false if possible_moves.nil?
-
-    return true if possible_moves.include?([row, column])
-
-    false
-  end
-
-  def move(color, figure, row, column)
-    figure_vector = to_figure(figure)
-    figure_symbol = figure_vector.pop
-    color_figures = @display[color]
-    tile = @positions[row][column]
-
-    figure_vector.each do |figure|
-      figure = @figures[color][figure]
-      next unless move_possible?(figure, row, column)
-
-      @positions[figure.row][figure.column] = nil
-      figure.change_position(row, column)
-      positions[figure.row][figure.column] = color_figures[figure_symbol]
-    end
-  end
-
-  def smth(color, figure, row, column)
-    figure = to_figure(figure)
-    color_figures = @display[color]
-    tile = @positions[row][column]
-    figure.each do |fig|
-      possible_moves = @figures[color][fig].possible_moves
-      next if possible_moves.nil?
-
-      next unless [row, column] in possible_moves
-
-      next if tile in color_figures
-
-      @positions[@figures[color][fig].row][@figures[color][fig].column] = nil
-      @figures[color][fig].row = row
-      @figures[color][fig].column = column
-      positions[@figures[color][fig].row][@figures[color][fig].column] = color_figures[figure[-1]]
-    end
-
-    @positions[@knight.row][knight.column] = nil
-    @knight.row = row
-    @knight.column = column
-    @positions[@knight.row][knight.column] = @knight_display
-    knight.possible_moves = knight.find_possible_moves
+  def change_position(row, column, symbol)
+    @positions[row][column] = symbol
   end
 end
