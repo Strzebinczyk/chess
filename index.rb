@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/board'
+require_relative 'lib/game'
 
 def render(board)
   puts '   +----+----+----+----+----+----+----+----+'
@@ -22,7 +22,7 @@ def render(board)
   puts ''
 end
 
-board = Board.new
-render(board)
-board.move(:black, 'pawn', 2, 5)
-render(board)
+game = Game.new
+render(game.board)
+game.move(:black, 'pawn', 2, 5)
+render(game.board)

@@ -1,6 +1,8 @@
 require_relative 'board'
 
 class Game
+  attr_reader :board
+
   def initialize
     @board = Board.new
     @active_player = :white
@@ -35,16 +37,26 @@ class Game
     end
   end
 
-  def is_enemy?(row, column)
+  def enemy?(row, column)
+    enemy = if @active_player == :white
+              @board.display[:black]
+            else
+              @board.display[:white]
+            end
+    enemy.include?(@board.positions[row][column])
   end
 
   # not finished
   def no_obstacles?(figure, path)
     # Get rid of starting spot
     path.shift
+    # Get rid of ending point and return false if there is friendly figure on it
+    tile = path.pop
+    return false unless enemy?(tile[0], tile[1]) || @board.positions[tile[0]][tile[1]].nil?
+    return false if path.pop
 
     path.each do |tile|
-      return false unless @positions[tile[0], tile[1]].nil?
+      return false unless @board.positions[tile[0]][tile[1]].nil?
     end
     true
   end
@@ -52,7 +64,9 @@ class Game
   def move_possible?(figure, row, column)
     possible_moves = figure.possible_moves
     return false if possible_moves.nil?
-    return true if possible_moves.include?([row, column])
+
+    path = compute_path(figure, [figure.row, figure.column], [row, column])
+    return true if possible_moves.include?([row, column]) && no_obstacles?(figure, path)
 
     false
   end
@@ -61,14 +75,13 @@ class Game
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
     color_figures = @board.display[color]
-    tile = @board.positions[row][column]
 
     figure_vector.each do |figure|
       figure = @board.figures[color][figure]
       next unless move_possible?(figure, row, column)
 
       path = compute_path(figure, [figure.row, figure.column], [row, column])
-      @board.clear_position([figure.row][figure.column])
+      @board.clear_position(figure.row, figure.column)
       figure.change_position(row, column)
       @board.change_position(row, column, color_figures[figure_symbol])
     end

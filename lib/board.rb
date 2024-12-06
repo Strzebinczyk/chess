@@ -8,7 +8,7 @@ require_relative 'figures/queen'
 require_relative 'figures/pawn'
 
 class Board
-  attr_reader :positions, :white_figures, :black_figures
+  attr_reader :positions, :figures, :display
 
   def initialize
     @display = { white: { queen: '♚', king: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' },
