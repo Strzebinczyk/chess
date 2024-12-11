@@ -101,4 +101,10 @@ class Board
       return figure if figure.row == row && figure.column == column
     end
   end
+
+  def kill(figure)
+    color = figure.color
+    key = @figures[color].key(figure)
+    @figures[color].delete(key)
+  end
 end

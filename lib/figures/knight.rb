@@ -3,7 +3,7 @@
 require_relative 'figure'
 
 class Knight
-  attr_reader :row, :column, :possible_moves
+  attr_reader :row, :column, :possible_moves, :color
 
   include Figure
 

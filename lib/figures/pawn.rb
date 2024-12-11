@@ -3,7 +3,7 @@
 require_relative 'figure'
 
 class Pawn
-  attr_reader :row, :column, :possible_moves
+  attr_reader :row, :column, :possible_moves, :color
 
   include Figure
 

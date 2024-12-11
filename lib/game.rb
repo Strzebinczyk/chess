@@ -13,7 +13,7 @@ class Game
 
   def to_figure(string)
     figures = { 'rook' => %i[rook1 rook2 rook], 'knight' => %i[knight1 knight2 knight],
-                'bishop' => %i[bishop1 bishop2 bishop], 'king' => [:king], 'queen' => [:queen],
+                'bishop' => %i[bishop1 bishop2 bishop], 'king' => %i[king king], 'queen' => %i[queen queen],
                 'pawn' => %i[pawn1 pawn2 pawn3 pawn4 pawn5 pawn6 pawn7 pawn8 pawn] }
     figures[string]
   end
@@ -109,10 +109,11 @@ class Game
                board.find_figure(:white, row, column)
              end
 
+    board.kill(figure)
     figure.kill
   end
 
-  # Not finished!
+  # Not finished! Need exceptions for invalid movesrook
   def move(figure, row, column, color = @active_player)
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
@@ -161,7 +162,6 @@ class Game
     enemy_king = find_enemy_king
     if check?
       enemy_king.possible_moves.each do |move|
-        puts move
         return false if move_possible?(enemy_king, move[0], move[1])
       end
       return true

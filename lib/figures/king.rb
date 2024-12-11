@@ -3,7 +3,7 @@
 require_relative 'figure'
 
 class King
-  attr_reader :row, :column, :possible_moves
+  attr_reader :row, :column, :possible_moves, :color
 
   include Figure
 

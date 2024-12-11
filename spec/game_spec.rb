@@ -71,11 +71,15 @@ describe Game do
     end
   end
 
-  describe '#move_possible' do
+  describe '#move_possible?' do
     it 'returns true if the move is possible' do
+      rook = Rook.new(:white, 7, 0)
+      expect(game.move_possible?(rook, 3, 0)).to be true
     end
 
     it 'returns false if the move is not possible' do
+      rook = Rook.new(:white, 7, 0)
+      expect(game.move_possible?(rook, 3, 3)).to be false
     end
   end
 end
