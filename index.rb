@@ -51,12 +51,20 @@ loop do
   row = input_num
   puts 'Please enter the column you want to move to'
   column = input_num
-  game.move(figure, row, column)
-  if game.checkmate?
-    puts 'checkmate'
-    puts "Congratulations, #{game.active_player}"
-    break
+  case game.move(figure, row, column)
+  in :ok
+    if game.checkmate?
+      puts 'checkmate'
+      puts "Congratulations, #{game.active_player}"
+      break
+    end
+    puts 'Check' if game.check?
+    game.change_active_player
+  in [:error, :move_not_possible]
+    puts 'Move not possible, please retry'
+    redo
+  in [:error, :obstacle]
+    puts 'Other figures in the way, please retry'
+    redo
   end
-  puts 'Check' if game.check?
-  game.change_active_player
 end

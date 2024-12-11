@@ -113,7 +113,7 @@ class Game
     figure.kill
   end
 
-  # Not finished! Need exceptions for invalid movesrook
+  # Not finished! Need exceptions for invalid moves
   def move(figure, row, column, color = @active_player)
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
@@ -122,13 +122,16 @@ class Game
       fig = @board.figures[color][fig]
       figure = fig if move_possible?(fig, row, column)
     end
-    puts 'Move not possible' if figure.is_a?(String)
+    return %i[error move_not_possible] if figure.is_a?(String)
+
     path = compute_path(figure, [figure.row, figure.column], [row, column])
-    puts 'Obstacles!' unless no_obstacles?(path)
+    return %i[error obstacle] unless no_obstacles?(path)
+
     @board.clear_position(figure.row, figure.column)
     figure.change_position(row, column)
     @board.change_position(row, column, color_figures[figure_symbol])
     kill(row, column) if enemy?(row, column)
+    :ok
   end
 
   def valid_figure?(figure)
