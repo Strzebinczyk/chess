@@ -18,7 +18,6 @@ class Game
     figures[string]
   end
 
-  # Something about this is no bueno
   def compute_path(figure, start, stop)
     path = [start]
     if figure.is_a?(Knight)
@@ -98,8 +97,7 @@ class Game
     possible_moves = figure.possible_moves
     return false if possible_moves.nil?
 
-    path = compute_path(figure, [figure.row, figure.column], [row, column])
-    return true if possible_moves.include?([row, column]) && no_obstacles?(path)
+    return true if possible_moves.include?([row, column])
 
     false
   end
@@ -114,20 +112,22 @@ class Game
     figure.kill
   end
 
+  # Not finished!
   def move(figure, row, column, color = @active_player)
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
     color_figures = @board.display[color]
-
     figure_vector.each do |fig|
       fig = @board.figures[color][fig]
-      next unless move_possible?(fig, row, column)
-
-      @board.clear_position(fig.row, fig.column)
-      fig.change_position(row, column)
-      @board.change_position(row, column, color_figures[figure_symbol])
-      kill(row, column) if enemy?(row, column)
+      figure = fig if move_possible?(fig, row, column)
     end
+    puts 'Move not possible' if figure.is_a?(String)
+    path = compute_path(figure, [figure.row, figure.column], [row, column])
+    puts 'Obstacles!' unless no_obstacles?(path)
+    @board.clear_position(figure.row, figure.column)
+    figure.change_position(row, column)
+    @board.change_position(row, column, color_figures[figure_symbol])
+    kill(row, column) if enemy?(row, column)
   end
 
   def valid_figure?(figure)

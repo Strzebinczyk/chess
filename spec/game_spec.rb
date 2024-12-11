@@ -70,4 +70,12 @@ describe Game do
       expect(game.valid_figure?('PaW1233n')).to be false
     end
   end
+
+  describe '#move_possible' do
+    it 'returns true if the move is possible' do
+    end
+
+    it 'returns false if the move is not possible' do
+    end
+  end
 end
