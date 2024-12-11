@@ -3,7 +3,7 @@
 require_relative 'board'
 
 class Game
-  attr_reader :board
+  attr_reader :board, :active_player
 
   def initialize
     @board = Board.new
@@ -18,6 +18,7 @@ class Game
     figures[string]
   end
 
+  # Something about this is no bueno
   def compute_path(figure, start, stop)
     path = [start]
     if figure.is_a?(Knight)
@@ -113,7 +114,7 @@ class Game
     figure.kill
   end
 
-  def move(color = @active_player, figure, row, column)
+  def move(figure, row, column, color = @active_player)
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
     color_figures = @board.display[color]
@@ -127,5 +128,52 @@ class Game
       @board.change_position(row, column, color_figures[figure_symbol])
       kill(row, column) if enemy?(row, column)
     end
+  end
+
+  def valid_figure?(figure)
+    figures = %w[pawn rook bishop king queen knight]
+    figures.include?(figure)
+  end
+
+  def find_enemy_king
+    if active_player == :white
+      @board.figures[:black][:king]
+    else
+      @board.figures[:white][:king]
+    end
+  end
+
+  def check?
+    enemy_king = find_enemy_king
+    enemy_king_position = [enemy_king.row, enemy_king.column]
+    figures = if active_player == :white
+                @board.figures[:white]
+              else
+                @board.figures[:black]
+              end
+    figures.each_value do |figure|
+      return true if figure.possible_moves.include?(enemy_king_position)
+    end
+    false
+  end
+
+  def checkmate?
+    enemy_king = find_enemy_king
+    if check?
+      enemy_king.possible_moves.each do |move|
+        puts move
+        return false if move_possible?(enemy_king, move[0], move[1])
+      end
+      return true
+    end
+    false
+  end
+
+  def change_active_player
+    @active_player = if @active_player == :white
+                       :black
+                     else
+                       :white
+                     end
   end
 end

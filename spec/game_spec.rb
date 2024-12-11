@@ -29,6 +29,14 @@ describe Game do
       path = [[7, 0], [6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]]
       expect(game.compute_path(bishop, start, stop)).to eql path
     end
+
+    it 'calculates path of a pawn' do
+      start = [6, 3]
+      stop = [4, 3]
+      pawn = Pawn.new(:white, 6, 3)
+      path = [[6, 3], [5, 3], [4, 3]]
+      expect(game.compute_path(pawn, start, stop)).to eql path
+    end
   end
 
   describe '#enemy?' do
@@ -50,6 +58,16 @@ describe Game do
     it 'returns false if there are obstacles' do
       path = [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]]
       expect(game.no_obstacles?(path)).to be false
+    end
+  end
+
+  describe '#valid_figure?' do
+    it 'returns true if given valid figure name' do
+      expect(game.valid_figure?('pawn')).to be true
+    end
+
+    it 'returns false if not given valid figure name' do
+      expect(game.valid_figure?('PaW1233n')).to be false
     end
   end
 end

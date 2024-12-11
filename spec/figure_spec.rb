@@ -24,13 +24,14 @@ describe Figure do
   end
 
   describe '#kill' do
-    king.kill
     it 'changes row and column instance variables to nil' do
+      king.kill
       kings_position = [king.row, king.column]
       expect(kings_position).to eql [nil, nil]
     end
 
     it 'changes possible_moves to nil' do
+      king.kill
       possible_moves = king.possible_moves
       expect(possible_moves).to be_nil
     end
