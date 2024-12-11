@@ -25,4 +25,17 @@ class Pawn
       result.push([1, 0])
     end
   end
+
+  def find_possible_moves
+    @move_pattern = find_move_pattern
+    result = []
+    @move_pattern.each do |option|
+      row = @row + option[0]
+      column = @column + option[1]
+      if (row in 0..7) && (column in 0..7)
+        result.push([row, column])
+      end
+    end
+    result
+  end
 end

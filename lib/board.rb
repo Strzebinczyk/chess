@@ -95,4 +95,10 @@ class Board
   def change_position(row, column, symbol)
     @positions[row][column] = symbol
   end
+
+  def find_figure(color, row, column)
+    @figures[color].each do |figure|
+      return figure if figure.row == row && figure.column == column
+    end
+  end
 end

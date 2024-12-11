@@ -21,8 +21,3 @@ def render(board)
   (0..7).each { |letter| print "  #{letter}  " }
   puts ''
 end
-
-game = Game.new
-render(game.board)
-game.move(:black, 'pawn', 2, 5)
-render(game.board)

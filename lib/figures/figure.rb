@@ -16,6 +16,13 @@ module Figure
   def change_position(row, column)
     @row = row
     @column = column
-    @possible_moves = possible_moves
+    @possible_moves = find_possible_moves
+  end
+
+  def kill
+    @row = nil
+    @column = nil
+    @possible_moves = nil
+    @move_pattern = nil
   end
 end
