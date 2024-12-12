@@ -113,13 +113,13 @@ class Game
     figure.kill
   end
 
-  # Not finished! Need exceptions for invalid moves
   def move(figure, row, column, color = @active_player)
     figure_vector = to_figure(figure)
     figure_symbol = figure_vector.pop
     color_figures = @board.display[color]
     figure_vector.each do |fig|
       fig = @board.figures[color][fig]
+      fig.update_possible_moves(@board) if figure_symbol == :pawn
       figure = fig if move_possible?(fig, row, column)
     end
     return %i[error move_not_possible] if figure.is_a?(String)

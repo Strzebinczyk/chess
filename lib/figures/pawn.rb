@@ -38,4 +38,24 @@ class Pawn
     end
     result
   end
+
+  def update_possible_moves(board)
+    # delete moves with obstacle
+    @possible_moves.each do |tile|
+      @possible_moves -= [tile] unless board.positions[tile[0]][tile[1]].nil?
+    end
+
+    # add moves with kill opportunity
+    if @color == :white
+      if board.display[:black].values.include?(board.positions[@row - 1][@column - 1])
+        @possible_moves.push([@row - 1, @column - 1])
+      elsif board.display[:black].values.include?(board.positions[@row - 1][@column + 1])
+        @possible_moves.push([@row - 1, @column + 1])
+      end
+    elsif board.display[:white].values.include?(board.positions[@row + 1][@column - 1])
+      @possible_moves.push([@row + 1, @column - 1])
+    elsif board.display[:white].values.include?(board.positions[@row + 1][@column + 1])
+      @possible_moves.push([@row + 1, @column + 1])
+    end
+  end
 end

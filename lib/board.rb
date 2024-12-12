@@ -36,22 +36,22 @@ class Board
     @figures[:white][:rook2] = Rook.new(:white, 7, 7)
     @positions[7][7] = @display[:white][:rook]
 
-    # @figures[:white][:pawn1] = Pawn.new(:white, 6, 0)
-    # @positions[6][0] = @display[:white][:pawn]
-    # @figures[:white][:pawn2] = Pawn.new(:white, 6, 1)
-    # @positions[6][1] = @display[:white][:pawn]
-    # @figures[:white][:pawn3] = Pawn.new(:white, 6, 2)
-    # @positions[6][2] = @display[:white][:pawn]
-    # @figures[:white][:pawn4] = Pawn.new(:white, 6, 3)
-    # @positions[6][3] = @display[:white][:pawn]
-    # @figures[:white][:pawn5] = Pawn.new(:white, 6, 4)
-    # @positions[6][4] = @display[:white][:pawn]
-    # @figures[:white][:pawn6] = Pawn.new(:white, 6, 5)
-    # @positions[6][5] = @display[:white][:pawn]
-    # @figures[:white][:pawn7] = Pawn.new(:white, 6, 6)
-    # @positions[6][6] = @display[:white][:pawn]
-    # @figures[:white][:pawn8] = Pawn.new(:white, 6, 7)
-    # @positions[6][7] = @display[:white][:pawn]
+    @figures[:white][:pawn1] = Pawn.new(:white, 6, 0)
+    @positions[6][0] = @display[:white][:pawn]
+    @figures[:white][:pawn2] = Pawn.new(:white, 6, 1)
+    @positions[6][1] = @display[:white][:pawn]
+    @figures[:white][:pawn3] = Pawn.new(:white, 6, 2)
+    @positions[6][2] = @display[:white][:pawn]
+    @figures[:white][:pawn4] = Pawn.new(:white, 6, 3)
+    @positions[6][3] = @display[:white][:pawn]
+    @figures[:white][:pawn5] = Pawn.new(:white, 6, 4)
+    @positions[6][4] = @display[:white][:pawn]
+    @figures[:white][:pawn6] = Pawn.new(:white, 6, 5)
+    @positions[6][5] = @display[:white][:pawn]
+    @figures[:white][:pawn7] = Pawn.new(:white, 6, 6)
+    @positions[6][6] = @display[:white][:pawn]
+    @figures[:white][:pawn8] = Pawn.new(:white, 6, 7)
+    @positions[6][7] = @display[:white][:pawn]
 
     @figures[:black][:rook1] = Rook.new(:black, 0, 0)
     @positions[0][0] = @display[:black][:rook]
@@ -70,22 +70,22 @@ class Board
     @figures[:black][:rook2] = Rook.new(:black, 0, 7)
     @positions[0][7] = @display[:black][:rook]
 
-    # @figures[:black][:pawn1] = Pawn.new(:black, 1, 0)
-    # @positions[1][0] = @display[:black][:pawn]
-    # @figures[:black][:pawn2] = Pawn.new(:black, 1, 1)
-    # @positions[1][1] = @display[:black][:pawn]
-    # @figures[:black][:pawn3] = Pawn.new(:black, 1, 2)
-    # @positions[1][2] = @display[:black][:pawn]
-    # @figures[:black][:pawn4] = Pawn.new(:black, 1, 3)
-    # @positions[1][3] = @display[:black][:pawn]
-    # @figures[:black][:pawn5] = Pawn.new(:black, 1, 4)
-    # @positions[1][4] = @display[:black][:pawn]
-    # @figures[:black][:pawn6] = Pawn.new(:black, 1, 5)
-    # @positions[1][5] = @display[:black][:pawn]
-    # @figures[:black][:pawn7] = Pawn.new(:black, 1, 6)
-    # @positions[1][6] = @display[:black][:pawn]
-    # @figures[:black][:pawn8] = Pawn.new(:black, 1, 7)
-    # @positions[1][7] = @display[:black][:pawn]
+    @figures[:black][:pawn1] = Pawn.new(:black, 1, 0)
+    @positions[1][0] = @display[:black][:pawn]
+    @figures[:black][:pawn2] = Pawn.new(:black, 1, 1)
+    @positions[1][1] = @display[:black][:pawn]
+    @figures[:black][:pawn3] = Pawn.new(:black, 1, 2)
+    @positions[1][2] = @display[:black][:pawn]
+    @figures[:black][:pawn4] = Pawn.new(:black, 1, 3)
+    @positions[1][3] = @display[:black][:pawn]
+    @figures[:black][:pawn5] = Pawn.new(:black, 1, 4)
+    @positions[1][4] = @display[:black][:pawn]
+    @figures[:black][:pawn6] = Pawn.new(:black, 1, 5)
+    @positions[1][5] = @display[:black][:pawn]
+    @figures[:black][:pawn7] = Pawn.new(:black, 1, 6)
+    @positions[1][6] = @display[:black][:pawn]
+    @figures[:black][:pawn8] = Pawn.new(:black, 1, 7)
+    @positions[1][7] = @display[:black][:pawn]
   end
 
   def clear_position(row, column)
