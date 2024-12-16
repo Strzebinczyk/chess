@@ -3,14 +3,16 @@
 require_relative 'lib/game'
 
 def render(board)
+  positions = board.display
+  rows = [8, 7, 6, 5, 4, 3, 2, 1]
   puts '   +----+----+----+----+----+----+----+----+'
-  board.positions.each_index do |row|
-    print "#{row}  "
-    board.positions[row].each_index do |column|
-      if board.positions[row][column].nil?
+  positions.each_index do |row|
+    print "#{rows[row]}  "
+    positions[row].each_index do |column|
+      if positions[row][column].nil?
         print '|    '
       else
-        print "| #{board.positions[row][column]}  "
+        print "| #{positions[row][column]}  "
       end
     end
     puts '|'
@@ -18,40 +20,26 @@ def render(board)
   end
 
   print '   '
-  (0..7).each { |letter| print "  #{letter}  " }
+  ('a'..'h').each { |letter| print "  #{letter}  " }
   puts ''
 end
 
-def input_figure(game)
-  puts 'Please enter the figure you want to move'
-  figure = gets.chomp.downcase
-  until game.valid_figure?(figure)
-    puts 'Please enter a valid figure'
-    puts 'You can choose from pawn, rook, bishop, knight, queen and king'
-    figure = gets.chomp.downcase
+def input(game)
+  puts "Please enter the move you want to make, for example: 'a1 to h1'"
+  input = gets.chomp.downcase
+  until game.valid_input?(input)
+    puts 'Please enter a valid move'
+    input = gets.chomp.downcase
   end
-  figure
-end
-
-def input_num
-  num = gets.chomp.to_i
-  until (0..7).include?(num)
-    puts 'Please enter a valid number, it has to be between 0 and 7'
-    num = gets.chomp.to_i
-  end
-  num
+  input
 end
 
 game = Game.new
 loop do
   render(game.board)
   puts "Active player is #{game.active_player}"
-  figure = input_figure(game)
-  puts 'Please enter the row you want to move to'
-  row = input_num
-  puts 'Please enter the column you want to move to'
-  column = input_num
-  case game.move(figure, row, column)
+  input = input(game)
+  case game.move(input)
   in :ok
     if game.checkmate?
       puts 'checkmate'

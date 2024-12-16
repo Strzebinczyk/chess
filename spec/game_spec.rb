@@ -5,14 +5,6 @@ require_relative '../lib/game'
 describe Game do
   subject(:game) { described_class.new }
 
-  describe '#to_figure' do
-    it 'takes a string name of a figure and returns an array of figure symbols' do
-      string = 'knight'
-      figures = %i[knight1 knight2 knight]
-      expect(game.to_figure(string)).to eql figures
-    end
-  end
-
   describe '#compute_path' do
     it 'takes a figure, starting and stopping point and returns a path the figure has to make' do
       start = [7, 0]
@@ -58,16 +50,6 @@ describe Game do
     it 'returns false if there are obstacles' do
       path = [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]]
       expect(game.no_obstacles?(path)).to be false
-    end
-  end
-
-  describe '#valid_figure?' do
-    it 'returns true if given valid figure name' do
-      expect(game.valid_figure?('pawn')).to be true
-    end
-
-    it 'returns false if not given valid figure name' do
-      expect(game.valid_figure?('PaW1233n')).to be false
     end
   end
 

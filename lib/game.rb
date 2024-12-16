@@ -11,13 +11,6 @@ class Game
     @players = %i[white black]
   end
 
-  def to_figure(string)
-    figures = { 'rook' => %i[rook1 rook2 rook], 'knight' => %i[knight1 knight2 knight],
-                'bishop' => %i[bishop1 bishop2 bishop], 'king' => %i[king king], 'queen' => %i[queen queen],
-                'pawn' => %i[pawn1 pawn2 pawn3 pawn4 pawn5 pawn6 pawn7 pawn8 pawn] }
-    figures[string]
-  end
-
   def compute_path(figure, start, stop)
     path = [start]
     if figure.is_a?(Knight)
@@ -72,12 +65,13 @@ class Game
   end
 
   def enemy?(row, column)
-    enemy = if @active_player == :white
-              @board.display[:black]
+    color = if @active_player == :white
+              :black
             else
-              @board.display[:white]
+              :white
             end
-    enemy.values.include?(@board.positions[row][column])
+    figure = board.find_figure(color, row, column)
+    !figure.nil?
   end
 
   def no_obstacles?(path)
@@ -85,12 +79,26 @@ class Game
     path.shift
     # Get rid of ending point and return false if there is friendly figure on it
     last_tile = path.pop
-    return false unless enemy?(last_tile[0], last_tile[1]) || @board.positions[last_tile[0]][last_tile[1]].nil?
+    unless enemy?(last_tile[0], last_tile[1]) || @board.find_figure(@active_player, last_tile[0], last_tile[1]).nil?
+      return false
+    end
 
     path.each do |tile|
-      return false unless @board.positions[tile[0]][tile[1]].nil?
+      unless @board.find_figure(:white, tile[0], tile[1]).nil? && @board.find_figure(:black, tile[0], tile[1]).nil?
+        return false
+      end
     end
     true
+  end
+
+  def valid_input?(input)
+    start = input[0..1]
+    stop = input[-2..]
+    if ('a'..'h').include?(start[0]) && ('a'..'h').include?(stop[0]) && ('1'..'8').include?(start[1]) && ('1'..'8').include?(stop[1])
+      return true
+    end
+
+    false
   end
 
   def move_possible?(figure, row, column)
@@ -113,30 +121,27 @@ class Game
     figure.kill
   end
 
-  def move(figure, row, column, color = @active_player)
-    figure_vector = to_figure(figure)
-    figure_symbol = figure_vector.pop
-    color_figures = @board.display[color]
-    figure_vector.each do |fig|
-      fig = @board.figures[color][fig]
-      fig.update_possible_moves(@board) if figure_symbol == :pawn
-      figure = fig if move_possible?(fig, row, column)
-    end
-    return %i[error move_not_possible] if figure.is_a?(String)
-
-    path = compute_path(figure, [figure.row, figure.column], [row, column])
-    return %i[error obstacle] unless no_obstacles?(path)
-
-    @board.clear_position(figure.row, figure.column)
-    figure.change_position(row, column)
-    @board.change_position(row, column, color_figures[figure_symbol])
-    kill(row, column) if enemy?(row, column)
-    :ok
+  def translate_position(string)
+    column = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6, 'h' => 7 }
+    row = { '8' => 0, '7' => 1, '6' => 2, '5' => 3, '4' => 4, '3' => 5, '2' => 6, '1' => 7 }
+    [row[string[1]], column[string[0]]]
   end
 
-  def valid_figure?(figure)
-    figures = %w[pawn rook bishop king queen knight]
-    figures.include?(figure)
+  def move(input)
+    start = translate_position(input[0..1])
+    stop = translate_position(input[-2..])
+    figure = @board.find_figure(@active_player, start[0], start[1])
+    return %i[error no_figure_on_start] if figure.nil?
+
+    figure.update_possible_moves(@board) if figure.is_a?(Pawn)
+    return %i[error move_not_possible] unless move_possible?(figure, stop[0], stop[1])
+
+    path = compute_path(figure, start, stop)
+    return %i[error obstacle] unless no_obstacles?(path)
+
+    figure.change_position(stop[0], stop[1])
+    kill(stop[0], stop[1]) if enemy?(stop[0], stop[1])
+    :ok
   end
 
   def find_enemy_king

@@ -3,7 +3,7 @@
 require_relative 'figure'
 
 class Bishop
-  attr_reader :row, :column, :possible_moves, :color
+  attr_reader :row, :column, :possible_moves, :color, :display
 
   include Figure
 
@@ -11,6 +11,7 @@ class Bishop
     @color = color
     @row = row
     @column = column
+    @display = { white: '♝', black: '♗' }
     @move_pattern = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
                      [-1, -1], [-2, -2], [-3, -3], [-4, -4], [-5, -5], [-6, -6], [-7, -7],
                      [-1, 1], [-2, 2], [-3, 3], [-4, 4], [-5, 5], [-6, 6], [-7, 7],

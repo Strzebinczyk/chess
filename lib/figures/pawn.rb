@@ -3,7 +3,7 @@
 require_relative 'figure'
 
 class Pawn
-  attr_reader :row, :column, :possible_moves, :color
+  attr_reader :row, :column, :possible_moves, :color, :display
 
   include Figure
 
@@ -11,6 +11,7 @@ class Pawn
     @color = color
     @row = row
     @column = column
+    @display = @display = { white: '♟', black: '♙' }
     @move_pattern = find_move_pattern
     @possible_moves = find_possible_moves
   end
@@ -42,19 +43,20 @@ class Pawn
   def update_possible_moves(board)
     # delete moves with obstacle
     @possible_moves.each do |tile|
-      @possible_moves -= [tile] unless board.positions[tile[0]][tile[1]].nil?
+      unless board.find_figure(:black, tile[0], tile[1]).nil? && board.find_figure(:white, tile[0], tile[1]).nil?
+        @possible_moves -= [tile]
+      end
     end
-
     # add moves with kill opportunity
     if @color == :white
-      if board.display[:black].values.include?(board.positions[@row - 1][@column - 1])
+      if board.find_figure(:black, @row - 1, @column - 1)
         @possible_moves.push([@row - 1, @column - 1])
-      elsif board.display[:black].values.include?(board.positions[@row - 1][@column + 1])
+      elsif board.find_figure(:black, @row - 1, @column + 1)
         @possible_moves.push([@row - 1, @column + 1])
       end
-    elsif board.display[:white].values.include?(board.positions[@row + 1][@column - 1])
+    elsif board.find_figure(:white, @row + 1, @column - 1)
       @possible_moves.push([@row + 1, @column - 1])
-    elsif board.display[:white].values.include?(board.positions[@row + 1][@column + 1])
+    elsif board.find_figure(:white, @row + 1, @column + 1)
       @possible_moves.push([@row + 1, @column + 1])
     end
   end
