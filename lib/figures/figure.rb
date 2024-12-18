@@ -1,28 +1,16 @@
 # frozen_string_literal: true
 
-module Figure
-  def find_possible_moves
-    result = []
-    @move_pattern.each do |option|
-      row = @row + option[0]
-      column = @column + option[1]
-      if (row in 0..7) && (column in 0..7)
-        result.push([row, column])
-      end
-    end
-    result
-  end
+class Figure
+  attr_reader :row, :column, :possible_moves, :color, :display, :move_pattern
 
-  def change_position(row, column)
+  def initialize(color, row, column)
+    @color = color
     @row = row
     @column = column
-    @possible_moves = find_possible_moves
   end
 
-  def kill
-    @row = nil
-    @column = nil
-    @possible_moves = nil
-    @move_pattern = nil
+  def change_position(position)
+    @row = position[0]
+    @column = position[1]
   end
 end

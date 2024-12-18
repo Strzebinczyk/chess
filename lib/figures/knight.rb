@@ -2,17 +2,14 @@
 
 require_relative 'figure'
 
-class Knight
-  attr_reader :row, :column, :possible_moves, :color, :display
+class Knight < Figure
+  def display
+    return '♞' if @color == :white
 
-  include Figure
+    '♘'
+  end
 
-  def initialize(color, row, column)
-    @color = color
-    @row = row
-    @column = column
-    @display = { white: '♞', black: '♘' }
-    @move_pattern = [[-2, -1], [-2, 1], [2, -1], [2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2]]
-    @possible_moves = find_possible_moves
+  def move_pattern
+    [[-2, -1], [-2, 1], [2, -1], [2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2]]
   end
 end

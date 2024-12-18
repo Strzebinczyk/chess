@@ -3,7 +3,11 @@
 require_relative 'lib/game'
 
 def render(board)
-  positions = board.display
+  hash = board.display
+  positions = Array.new(8) { Array.new(8, nil) }
+  hash.each do |position, symbol|
+    positions[position[0]][position[1]] = symbol
+  end
   rows = [8, 7, 6, 5, 4, 3, 2, 1]
   puts '   +----+----+----+----+----+----+----+----+'
   positions.each_index do |row|

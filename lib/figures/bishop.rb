@@ -2,20 +2,17 @@
 
 require_relative 'figure'
 
-class Bishop
-  attr_reader :row, :column, :possible_moves, :color, :display
+class Bishop < Figure
+  def display
+    return '♝' if @color == :white
 
-  include Figure
+    '♗'
+  end
 
-  def initialize(color, row, column)
-    @color = color
-    @row = row
-    @column = column
-    @display = { white: '♝', black: '♗' }
-    @move_pattern = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
-                     [-1, -1], [-2, -2], [-3, -3], [-4, -4], [-5, -5], [-6, -6], [-7, -7],
-                     [-1, 1], [-2, 2], [-3, 3], [-4, 4], [-5, 5], [-6, 6], [-7, 7],
-                     [1, -1], [2, -2], [3, -3], [4, -4], [5, -5], [6, -6], [7, -7]]
-    @possible_moves = find_possible_moves
+  def move_pattern
+    [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
+     [-1, -1], [-2, -2], [-3, -3], [-4, -4], [-5, -5], [-6, -6], [-7, -7],
+     [-1, 1], [-2, 2], [-3, 3], [-4, 4], [-5, 5], [-6, 6], [-7, 7],
+     [1, -1], [2, -2], [3, -3], [4, -4], [5, -5], [6, -6], [7, -7]]
   end
 end

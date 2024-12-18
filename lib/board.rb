@@ -12,10 +12,6 @@ class Board
 
   def initialize
     @figures = { white: {}, black: {} }
-    prepare_board
-  end
-
-  def prepare_board
     @figures[:white][:rook1] = Rook.new(:white, 7, 0)
     @figures[:white][:knight1] = Knight.new(:white, 7, 1)
     @figures[:white][:bishop1] = Bishop.new(:white, 7, 2)
@@ -53,26 +49,60 @@ class Board
     @figures[:black][:pawn8] = Pawn.new(:black, 1, 7)
   end
 
-  def find_figure(color, row, column)
-    @figures[color].each_value do |figure|
-      return figure if figure.row == row && figure.column == column
+  def find_figure(position)
+    @figures.each_key do |color|
+      @figures[color].each_value do |figure|
+        return figure if figure.row == position[0] && figure.column == position[1]
+      end
     end
     nil
   end
 
-  def kill(figure)
+  def kill(position)
+    figure = find_figure(position)
     color = figure.color
     key = @figures[color].key(figure)
     @figures[color].delete(key)
   end
 
   def display
-    positions = Array.new(8) { Array.new(8, nil) }
+    positions = {}
     @figures.each_key do |color|
       @figures[color].each_value do |figure|
-        positions[figure.row][figure.column] = figure.display[color]
+        positions[[figure.row, figure.column]] = figure.display
       end
     end
     positions
+  end
+
+  def find_possible_moves(figure)
+    result = []
+    figure.update_move_pattern if figure.is_a?(Pawn)
+    figure.move_pattern.each do |option|
+      row = figure.row + option[0]
+      column = figure.column + option[1]
+      if (row in 0..7) && (column in 0..7)
+        result.push([row, column])
+      end
+    end
+    if figure.is_a?(Pawn)
+      # delete moves with obstacle
+      result.each do |tile|
+        result -= [tile] unless find_figure(tile).nil?
+      end
+      # add moves with kill opportunity
+      if figure.color == :white
+        if find_figure([figure.row - 1, figure.column - 1])
+          result.push([figure.row - 1, figure.column - 1])
+        elsif find_figure([figure.row - 1, figure.column + 1])
+          result.push([figure.row - 1, figure.column + 1])
+        end
+      elsif find_figure([figure.row + 1, figure.column - 1])
+        result.push([figure.row + 1, figure.column - 1])
+      elsif find_figure([figure.row + 1, figure.column + 1])
+        result.push([figure.row + 1, figure.column + 1])
+      end
+    end
+    result
   end
 end

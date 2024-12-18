@@ -5,63 +5,105 @@ require_relative '../lib/game'
 describe Game do
   subject(:game) { described_class.new }
 
-  describe '#compute_path' do
-    it 'takes a figure, starting and stopping point and returns a path the figure has to make' do
-      start = [7, 0]
-      stop = [3, 0]
-      rook = Rook.new(:white, 7, 0)
-      path = [[7, 0], [6, 0], [5, 0], [4, 0], [3, 0]]
-      expect(game.compute_path(rook, start, stop)).to eql path
+  describe '#valid_input?' do
+    it 'returns true if the input has a valid position at the start and end of string' do
+      input = 'a5 to the a6'
+      expect(game.valid_input?(input)).to be true
     end
 
-    it 'calculates path of a bishop' do
-      start = [7, 0]
-      stop = [0, 7]
-      bishop = Bishop.new(:white, 7, 0)
-      path = [[7, 0], [6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]]
-      expect(game.compute_path(bishop, start, stop)).to eql path
-    end
-
-    it 'calculates path of a pawn' do
-      start = [6, 3]
-      stop = [4, 3]
-      pawn = Pawn.new(:white, 6, 3)
-      path = [[6, 3], [5, 3], [4, 3]]
-      expect(game.compute_path(pawn, start, stop)).to eql path
+    it 'returns false when the start or end position is missing' do
+      input = 'a7 to wherever'
+      expect(game.valid_input?(input)).to be false
     end
   end
 
-  describe '#enemy?' do
-    it 'takes row and column and returns true if position is taken by the enemy' do
-      expect(game.enemy?(0, 0)).to be true
+  describe '#change_active_player' do
+    it 'changes active player to black after it was white on initialize' do
+      game.change_active_player
+      expect(game.active_player).to be :black
     end
 
-    it 'returns false if position is unoccupied or there is a friendly figure there' do
-      expect(game.enemy?(6, 2)).to be false
+    it 'changes active player back to white after it was black' do
+      game.change_active_player
+      game.change_active_player
+      expect(game.active_player).to be :white
     end
   end
 
-  describe '#no_obstacles?' do
-    it 'returns true if the path is clear without other pieces in the way' do
-      path = [[3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7]]
-      expect(game.no_obstacles?(path)).to be true
+  describe '#move' do
+    # Board starting point:
+    #    +----+----+----+----+----+----+----+----+
+    # 8  | ♖  | ♘  | ♗  | ♕  | ♔  | ♗  | ♘  | ♖  |
+    #    +----+----+----+----+----+----+----+----+
+    # 7  | ♙  | ♙  | ♙  | ♙  | ♙  | ♙  | ♙  | ♙  |
+    #    +----+----+----+----+----+----+----+----+
+    # 6  |    |    |    |    |    |    |    |    |
+    #    +----+----+----+----+----+----+----+----+
+    # 5  |    |    |    |    |    |    |    |    |
+    #    +----+----+----+----+----+----+----+----+
+    # 4  |    |    |    |    |    |    |    |    |
+    #    +----+----+----+----+----+----+----+----+
+    # 3  |    |    |    |    |    |    |    |    |
+    #    +----+----+----+----+----+----+----+----+
+    # 2  | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  |
+    #    +----+----+----+----+----+----+----+----+
+    # 1  | ♜  | ♞  | ♝  | ♛  | ♚  | ♝  | ♞  | ♜  |
+    #    +----+----+----+----+----+----+----+----+
+    #      a    b    c    d    e    f    g    h
+    # Active player is white
+
+    it 'moves the figure from one place to another if the move is possible' do
+      position = [6, 0]
+      moved_pawn = game.board.find_figure(position)
+      game.move('a2 to a4')
+      expect(moved_pawn.row).to be 4
     end
 
-    it 'returns false if there are obstacles' do
-      path = [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]]
-      expect(game.no_obstacles?(path)).to be false
+    it 'returns [:error, :no_figure_on_start] if the starting point is empty' do
+      expect(game.move('a3 to a4')).to eql %i[error no_figure_on_start]
+    end
+
+    it 'returns [:error, :move_not_possible] if move is not in the array of possible moves' do
+      expect(game.move('a2 to h4')).to eql %i[error move_not_possible]
+    end
+
+    it 'returns [:error, :obstacle] if there is another figure in the way' do
+      expect(game.move('a1 to a4')).to eql %i[error obstacle]
+    end
+
+    it 'removes enemy figure from board if it is on the end point' do
+      position = [6, 0]
+      killed_pawn = game.board.find_figure(position)
+      game.move('a2 to a4')
+      game.move('b7 to b5')
+      game.move('a1 to a3')
+      game.move('b5 to a4')
+      # Board after moves:
+      #    +----+----+----+----+----+----+----+----+
+      # 8  | ♖  | ♘  | ♗  | ♕  | ♔  | ♗  | ♘  | ♖  |
+      #    +----+----+----+----+----+----+----+----+
+      # 7  | ♙  |    | ♙  | ♙  | ♙  | ♙  | ♙  | ♙  |
+      #    +----+----+----+----+----+----+----+----+
+      # 6  |    |    |    |    |    |    |    |    |
+      #    +----+----+----+----+----+----+----+----+
+      # 5  |    |    |    |    |    |    |    |    |
+      #    +----+----+----+----+----+----+----+----+
+      # 4  | ♙  |    |    |    |    |    |    |    |
+      #    +----+----+----+----+----+----+----+----+
+      # 3  | ♜  |    |    |    |    |    |    |    |
+      #    +----+----+----+----+----+----+----+----+
+      # 2  |    | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  |
+      #    +----+----+----+----+----+----+----+----+
+      # 1  |    | ♞  | ♝  | ♛  | ♚  | ♝  | ♞  | ♜  |
+      #    +----+----+----+----+----+----+----+----+
+      #      a    b    c    d    e    f    g    h
+      # Active player is white
+      expect(game.board.figures.values.include?(killed_pawn)).to be false
+    end
+
+    it 'returns :ok if move was executed correctly' do
+      expect(game.move('a2 to a4')).to be :ok
     end
   end
-
-  describe '#move_possible?' do
-    it 'returns true if the move is possible' do
-      rook = Rook.new(:white, 7, 0)
-      expect(game.move_possible?(rook, 3, 0)).to be true
-    end
-
-    it 'returns false if the move is not possible' do
-      rook = Rook.new(:white, 7, 0)
-      expect(game.move_possible?(rook, 3, 3)).to be false
-    end
-  end
+  # check, checkmate
 end
