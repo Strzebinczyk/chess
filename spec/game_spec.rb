@@ -71,7 +71,7 @@ describe Game do
       expect(game.move('a1 to a4')).to eql %i[error obstacle]
     end
 
-    it 'removes enemy figure from board if it is on the end point' do
+    it 'removes enemy figure from board if it is on the end point' do # rubocop:disable RSpec/ExampleLength
       position = [6, 0]
       killed_pawn = game.board.find_figure(position)
       game.move('a2 to a4')
@@ -104,6 +104,117 @@ describe Game do
     it 'returns :ok if move was executed correctly' do
       expect(game.move('a2 to a4')).to be :ok
     end
+
+    context 'check moving in every direction' do
+      before do
+        game.move('a2 a4')
+        game.move('b7 b5')
+        game.move('b2 b4')
+        game.move('b5 a4')
+        # Board starting point:
+        #    +----+----+----+----+----+----+----+----+
+        # 8  | ♖  | ♘  | ♗  | ♕  | ♔  | ♗  | ♘  | ♖  |
+        #    +----+----+----+----+----+----+----+----+
+        # 7  | ♙  |    | ♙  | ♙  | ♙  | ♙  | ♙  | ♙  |
+        #    +----+----+----+----+----+----+----+----+
+        # 6  |    |    |    |    |    |    |    |    |
+        #    +----+----+----+----+----+----+----+----+
+        # 5  |    |    |    |    |    |    |    |    |
+        #    +----+----+----+----+----+----+----+----+
+        # 4  | ♙  | ♟  |    |    |    |    |    |    |
+        #    +----+----+----+----+----+----+----+----+
+        # 3  |    |    |    |    |    |    |    |    |
+        #    +----+----+----+----+----+----+----+----+
+        # 2  |    |    | ♟  | ♟  | ♟  | ♟  | ♟  | ♟  |
+        #    +----+----+----+----+----+----+----+----+
+        # 1  | ♜  | ♞  | ♝  | ♛  | ♚  | ♝  | ♞  | ♜  |
+        #    +----+----+----+----+----+----+----+----+
+        #      a    b    c    d    e    f    g    h
+        # Active player is white
+      end
+
+      it 'moves verically up' do
+        expect(game.move('a1 to a4')).to be :ok
+      end
+
+      it 'moves verically down' do
+        game.move('a1 to a4')
+        game.move('h7 h6')
+        expect(game.move('a4 to a3')).to be :ok
+      end
+
+      it 'moves horizontally right' do
+        game.move('a4 to a3')
+        game.move('h7 h6')
+        expect(game.move('a3 to g3')).to be :ok
+      end
+
+      it 'moves horizontally left' do
+        game.move('a4 to a3')
+        game.move('h7 h6')
+        game.move('a3 to g3')
+        game.move('h6 h5')
+        expect(game.move('g3 to a3')).to be :ok
+      end
+    end
   end
-  # check, checkmate
+
+  # describe '#checkmate?' do
+  #   before do
+  #     game.move('c2 to c3')
+  #     game.move('d7 to d5')
+  #     game.move('b2 to b4')
+  #     # Board after moves:
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 8  | ♖  | ♘  | ♗  | ♕  | ♔  | ♗  | ♘  | ♖  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 7  | ♙  | ♙  | ♙  |    | ♙  | ♙  | ♙  | ♙  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 6  |    |    |    | ♙  |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 5  |    |    |    |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 4  |    | ♟  |    |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 3  |    |    | ♟  |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 2  | ♟  |    |    | ♟  | ♟  | ♟  | ♟  | ♟  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 1  | ♜  | ♞  | ♝  | ♛  | ♚  | ♝  | ♞  | ♜  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     #      a    b    c    d    e    f    g    h
+  #     # Active player is black
+  #   end
+
+  #   it "returns false if there's no checkmate" do
+  #     expect(game.checkmate?).to be false
+  #   end
+
+  #   it "returns true if there's checkmate" do
+  #     game.move('e8 to a4')
+  #     # Board after move:
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 8  | ♖  | ♘  | ♗  | ♕  |    | ♗  | ♘  | ♖  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 7  | ♙  | ♙  | ♙  |    | ♙  | ♙  | ♙  | ♙  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 6  |    |    |    | ♙  |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 5  |    |    |    |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 4  | ♔  | ♟  |    |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 3  |    |    | ♟  |    |    |    |    |    |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 2  | ♟  |    |    | ♟  | ♟  | ♟  | ♟  | ♟  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     # 1  | ♜  | ♞  | ♝  | ♛  | ♚  | ♝  | ♞  | ♜  |
+  #     #    +----+----+----+----+----+----+----+----+
+  #     #      a    b    c    d    e    f    g    h
+  #     # Active player is white
+
+  #     expect(game.checkmate?).to be true
+  #   end
+  # end
+  # check
 end

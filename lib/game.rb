@@ -137,7 +137,7 @@ class Game
     # move diagonally down and left
     elsif rows.negative? && columns.negative?
       until current == stop
-        current = [(current[0] + - 1), (current[1] - 1)]
+        current = [(current[0] - 1), (current[1] - 1)]
         path.push(current)
       end
     end
@@ -162,3 +162,11 @@ class Game
     false
   end
 end
+
+game = Game.new
+game.move('c2 to c3')
+game.move('d7 to d5')
+game.move('b2 to b4')
+puts game.check?
+game.move('e8 to a4')
+puts check?
