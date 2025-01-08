@@ -13,4 +13,8 @@ class Figure
     @row = position[0]
     @column = position[1]
   end
+
+  def position
+    [@row, @column]
+  end
 end

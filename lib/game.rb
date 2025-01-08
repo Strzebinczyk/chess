@@ -36,16 +36,32 @@ class Game
     enemy_king_position = [enemy_king.row, enemy_king.column]
     figures = @board.figures[@active_player]
     figures.each_value do |figure|
-      path = compute_path(figure, [figure.row, figure.column], enemy_king_position)
+      figure_position = [figure.row, figure.column]
+      next unless move_possible?(figure, enemy_king_position)
+
+      path = compute_path(figure, figure_position, enemy_king_position)
       next unless no_obstacles?(path)
-      return true if @board.find_possible_moves(figure).include?(enemy_king_position)
+
+      return true
     end
     false
   end
 
   def checkmate?
-    check? &&
-      enemy_king.possible_moves.none? { |move| move_possible?(enemy_king, move[0], move[1]) }
+    return false unless check?
+
+    figures = @board.figures[@active_player]
+    @board.find_possible_moves(enemy_king).none? do |move|
+      enemy_king_path = compute_path(enemy_king, enemy_king.position, move)
+      return false unless no_obstacles?(enemy_king_path)
+
+      figures.each_value do |figure|
+        return true unless move_possible?(figure, enemy_king.position)
+
+        path = compute_path(figure, figure.position, enemy_king.position)
+        return false if no_obstacles?(path)
+      end
+    end
   end
 
   def change_active_player
@@ -162,11 +178,3 @@ class Game
     false
   end
 end
-
-game = Game.new
-game.move('c2 to c3')
-game.move('d7 to d5')
-game.move('b2 to b4')
-puts game.check?
-game.move('e8 to a4')
-puts check?
