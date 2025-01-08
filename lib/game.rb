@@ -2,7 +2,7 @@
 
 require_relative 'board'
 
-class Game
+class Game # rubocop:disable Metrics/ClassLength,Style/Documentation
   attr_reader :board, :active_player
 
   def initialize
@@ -47,7 +47,7 @@ class Game
     false
   end
 
-  def checkmate?
+  def checkmate? # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return false unless check?
 
     figures = @board.figures[@active_player]
@@ -98,7 +98,7 @@ class Game
     [row[string[1]], column[string[0]]]
   end
 
-  def compute_path(figure, start, stop)
+  def compute_path(figure, start, stop) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
     path = [start]
     # knight jumps, so his path is only a starting and stopping point
     if figure.is_a?(Knight)

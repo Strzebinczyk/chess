@@ -2,7 +2,7 @@
 
 require_relative 'lib/game'
 
-def render(board)
+def render(board) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
   hash = board.display
   positions = Array.new(8) { Array.new(8, nil) }
   hash.each do |position, symbol|

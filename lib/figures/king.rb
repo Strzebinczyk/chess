@@ -2,7 +2,7 @@
 
 require_relative 'figure'
 
-class King < Figure
+class King < Figure # rubocop:disable Style/Documentation
   def display
     return '♛' if @color == :white
 

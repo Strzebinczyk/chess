@@ -7,10 +7,10 @@ require_relative 'figures/king'
 require_relative 'figures/queen'
 require_relative 'figures/pawn'
 
-class Board
+class Board # rubocop:disable Style/Documentation
   attr_reader :figures
 
-  def initialize
+  def initialize # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     @figures = { white: {}, black: {} }
     @figures[:white][:rook1] = Rook.new(:white, 7, 0)
     @figures[:white][:knight1] = Knight.new(:white, 7, 1)
@@ -75,7 +75,7 @@ class Board
     positions
   end
 
-  def find_possible_moves(figure)
+  def find_possible_moves(figure) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
     result = []
     figure.update_move_pattern if figure.is_a?(Pawn)
     figure.move_pattern.each do |option|

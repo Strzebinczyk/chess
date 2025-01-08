@@ -71,7 +71,7 @@ describe Game do
       expect(game.move('a1 to a4')).to eql %i[error obstacle]
     end
 
-    it 'removes enemy figure from board if it is on the end point' do
+    it 'removes enemy figure from board if it is on the end point' do # rubocop:disable RSpec/ExampleLength
       position = [6, 0]
       killed_pawn = game.board.find_figure(position)
       game.move('a2 to a4')
@@ -105,7 +105,7 @@ describe Game do
       expect(game.move('a2 to a4')).to be :ok
     end
 
-    context 'check moving in every direction' do
+    context 'check moving in every direction' do # rubocop:disable RSpec/ContextWording
       let(:game2) { described_class.new }
 
       it 'moves verically up' do

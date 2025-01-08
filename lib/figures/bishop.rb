@@ -2,7 +2,7 @@
 
 require_relative 'figure'
 
-class Bishop < Figure
+class Bishop < Figure # rubocop:disable Style/Documentation
   def display
     return '♝' if @color == :white
 

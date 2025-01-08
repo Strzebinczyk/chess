@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Figure
+class Figure # rubocop:disable Style/Documentation
   attr_reader :row, :column, :possible_moves, :color, :display, :move_pattern
 
   def initialize(color, row, column)
