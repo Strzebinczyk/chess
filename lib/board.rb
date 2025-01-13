@@ -51,7 +51,7 @@ class Board # rubocop:disable Style/Documentation
 
   def find_figure(position)
     @figures.each_key do |color|
-      @figures[color].each_value do |figure|
+      @figures[color].values.find do |figure|
         return figure if figure.row == position[0] && figure.column == position[1]
       end
     end
@@ -60,6 +60,8 @@ class Board # rubocop:disable Style/Documentation
 
   def kill(position)
     figure = find_figure(position)
+    return if figure.nil?
+
     color = figure.color
     key = @figures[color].key(figure)
     @figures[color].delete(key)
@@ -77,7 +79,6 @@ class Board # rubocop:disable Style/Documentation
 
   def find_possible_moves(figure) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
     result = []
-    figure.update_move_pattern if figure.is_a?(Pawn)
     figure.move_pattern.each do |option|
       row = figure.row + option[0]
       column = figure.column + option[1]

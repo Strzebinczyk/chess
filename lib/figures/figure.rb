@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Figure # rubocop:disable Style/Documentation
-  attr_reader :row, :column, :possible_moves, :color, :display, :move_pattern
+  attr_reader :row, :column, :possible_moves, :color, :display
 
   def initialize(color, row, column)
     @color = color

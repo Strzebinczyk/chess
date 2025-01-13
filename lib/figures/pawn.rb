@@ -20,16 +20,4 @@ class Pawn < Figure # rubocop:disable Style/Documentation
     end
     result
   end
-
-  def update_move_pattern
-    result = []
-    if @color == :white
-      result.push([-2, 0]) if @row == 6
-      result.push([-1, 0])
-    else
-      result.push([2, 0]) if @row == 1
-      result.push([1, 0])
-    end
-    @move_pattern = result
-  end
 end
