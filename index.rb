@@ -29,20 +29,34 @@ def render(board) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
 end
 
 def input(game)
-  puts "Please enter the move you want to make, for example: 'a1 to h1'"
+  puts "Please enter 'save' or the move you want to make, for example: 'a1 to h1'"
   input = gets.chomp.downcase
   until game.valid_input?(input)
-    puts 'Please enter a valid move'
+    puts "Please enter a valid move or 'save'"
     input = gets.chomp.downcase
   end
   input
 end
 
 game = Game.new
+puts 'Do you want to start a new game or load a save file?'
+puts "Enter 'load' to load an existing save or anything else, to start a new game"
+input = gets.chomp.downcase
+if input == 'load'
+  puts 'Enter a filename to load'
+  name = gets.chomp.downcase
+  game.load_game(name)
+end
 loop do
   render(game.board)
   puts "Active player is #{game.active_player}"
   input = input(game)
+  if input == 'save'
+    puts 'Please enter a name for your save'
+    name = gets.chomp.downcase
+    game.save_game(name)
+    break
+  end
   case game.move(input)
   in :ok
     if game.checkmate?

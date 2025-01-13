@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'yaml'
 require_relative 'board'
 
 class Game # rubocop:disable Metrics/ClassLength,Style/Documentation
@@ -13,7 +14,7 @@ class Game # rubocop:disable Metrics/ClassLength,Style/Documentation
 
   def valid_input?(move)
     regex = /^[a-h][1-8].*[a-h][1-8]$/
-    regex.match?(move)
+    regex.match?(move) || move == 'save'
   end
 
   def move(input)
@@ -66,6 +67,21 @@ class Game # rubocop:disable Metrics/ClassLength,Style/Documentation
 
   def change_active_player
     @active_player = inactive_player
+  end
+
+  def load_game(name)
+    filename = "saves/#{name}.yml"
+    yaml = YAML.load_file(filename, permitted_classes: [Symbol, Board, Rook, King, Bishop, Knight, Queen, Pawn])
+    @board = yaml[:board]
+    @active_player = yaml[:active_player]
+    @players = yaml[:players]
+  end
+
+  def save_game(name)
+    Dir.mkdir('saves') unless Dir.exist?('saves')
+    filename = "saves/#{name}.yml"
+    variables = { board: @board, active_player: @active_player, players: @players }
+    File.write(filename, variables.to_yaml)
   end
 
   private
